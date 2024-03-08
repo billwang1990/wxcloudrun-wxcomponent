@@ -92,7 +92,7 @@ func bizHandler(c *gin.Context) {
 	}
 	token, err := wx.GetAuthorizerAccessToken(c.Query("appid"))
 	if err != nil {
-		log.Infof("数据库查询到的token是 %s", token)
+		log.Infof("数据库查询到的token是 %s appid is : %s", token, c.Query("appid"))
 	} else {
 		log.Errorf("数据库查询到的token是吧 %+v", err)
 	}
