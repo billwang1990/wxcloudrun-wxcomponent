@@ -24,6 +24,10 @@ func GetComponentAccessToken() (string, error) {
 	return getAccessTokenWithRetry(wxbase.GetAppid(), model.WXTOKENTYPE_OWN)
 }
 
+func BizGetComponentAccessToken(appid string) (string, error) {
+	return getAccessTokenWithRetry(appid, model.WXTOKENTYPE_OWN)
+}
+
 func getNewComponentAccessToken() (string, error) {
 	ticket := wxbase.GetTicket()
 	if len(ticket) == 0 {

@@ -91,7 +91,7 @@ func bizHandler(c *gin.Context) {
 		return
 	}
 	
-	token, err := wx.GetAuthorizerAccessToken(r.Appid)
+	token, err := wx.BizGetComponentAccessToken(r.Appid)
 
 	log.Infof("r.Appid是 %s", r.Appid)
 	if err != nil {
