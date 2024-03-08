@@ -7,6 +7,9 @@ COPY . /wxcloudrun-wxcomponent/
 
 RUN cd /wxcloudrun-wxcomponent/client && npm install --registry=https://registry.npm.taobao.org && npm run build
 
+RUN cd /wxcloudrun-wxcomponent/client && npm config set registry https://registry.npmjs.org/ && npm install --verbose
+RUN cd /wxcloudrun-wxcomponent/client && npm run build
+
 FROM golang:1.17.1-alpine3.14 as builder
 
 # 指定构建过程中的工作目录
