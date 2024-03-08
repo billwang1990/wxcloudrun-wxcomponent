@@ -45,7 +45,7 @@ func bizHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
 	}
-
+	log.Infof("wyq-------// 转发到用户配置的地址")
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {
@@ -54,6 +54,7 @@ func bizHandler(c *gin.Context) {
 		return
 	}
 	if !proxyOpen {
+		log.Infof("wyq-------// proxyOpen")
 		c.String(http.StatusOK, "success")
 	}
 }
