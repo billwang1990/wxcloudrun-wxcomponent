@@ -27,7 +27,7 @@ func postContent(content  string, token string) {
 	log.Infof("wyq-------// postContent %s", content)
 	    // 定义要发送的JSON数据
 		jsonData := []byte(`{
-			"touser": "opnbu552g7sy8s63dgm-M60lg7Og",
+			"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
 			"msgtype": "text",
 			"text": {
 				"content": "\n—————保罗AI客服回复"
@@ -89,7 +89,7 @@ func bizHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
 	}
-	mytoken := "78_uCzSfzKazw5oy3atpp546ZuEWQg0GbrCptn6E-Gv09QKR_oNji0-o6ey7u-RxLsR4Loq17LAXxF1d-83uYCZ4IG2ZjNykaBGzRSu3gC6aNGox_JTy9NHo4KgvACvJvNKI3w-5bC3-ihC72p2WPZdAGDGZJ"
+	mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
 	postContent("", mytoken)
 	log.Infof("wyq-------// 转发到用户配置的地址")
 	// 转发到用户配置的地址
