@@ -9,7 +9,8 @@ import (
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
-
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/wx"
+	
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/dao"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/model"
 	"github.com/gin-gonic/gin"
@@ -89,6 +90,8 @@ func bizHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
 	}
+	token, err := wx.GetAuthorizerAccessToken(c.Query("appid"))
+	log.Infof("数据库查询到的token是 %s", token)
 	mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
 	postContent("", mytoken)
 	log.Infof("wyq-------// 转发到用户配置的地址")
