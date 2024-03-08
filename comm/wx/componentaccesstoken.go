@@ -25,7 +25,7 @@ func GetComponentAccessToken() (string, error) {
 }
 
 func BizGetComponentAccessToken(appid string) (string, error) {
-	return getAccessTokenWithRetry(appid, model.WXTOKENTYPE_OWN)
+	return getAccessTokenWithRetry(appid, model.WXTOKENTYPE_AUTH)
 }
 
 func getNewComponentAccessToken() (string, error) {
