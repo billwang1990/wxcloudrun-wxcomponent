@@ -97,7 +97,8 @@ func bizHandler(c *gin.Context) {
 	if err != nil {
 		log.Infof("数据库查询到的token是 %s", token)
 	} else {
-		log.Errorf("数据库查询到的token是吧 %+v", err)
+		log.Errorf("数据库查询到的token失败 ")
+		log.Error(err)
 	}
 	mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
 	postContent("", mytoken)
