@@ -90,9 +90,12 @@ func bizHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
 	}
-	token, err := wx.GetAuthorizerAccessToken(c.Param("appid"))
+	
+	token, err := wx.GetAuthorizerAccessToken(r.Appid)
+
+	log.Infof("r.Appid是 %s", r.Appid)
 	if err != nil {
-		log.Infof("数据库查询到的token是 %s appid is : %s", token, c.Param("appid"))
+		log.Infof("数据库查询到的token是 %s", token)
 	} else {
 		log.Errorf("数据库查询到的token是吧 %+v", err)
 	}
