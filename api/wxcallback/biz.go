@@ -93,7 +93,7 @@ func bizHandler(c *gin.Context) {
 	
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
 
-	log.Infof("r.Appid是 %s", r.Appid)
+	log.Infof("r.Appid是 %s, token 是%s", r.Appid, token)
 	if err != nil {
 		log.Infof("数据库查询到的token是 %s", token)
 	} else {
