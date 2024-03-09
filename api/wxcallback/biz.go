@@ -73,7 +73,7 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 	if r.MsgType != "text" {
 		return nil
 	}
-	postContent("", token)
+	// postContent("", token)
 	return nil
 }
 
