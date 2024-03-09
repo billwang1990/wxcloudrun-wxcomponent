@@ -25,7 +25,7 @@ func Init() error {
 	for i, opt := range appOpts {
 		log.Infof("[%d]--begin init--", i)
 		if err := opt(); err != nil {
-			log.Errorf("inits failed, err:%v\n", err)
+			log.Errorf("[%d] inits failed, err:%v\n", i, err)
 			return err
 		} else {
 			log.Infof("[%d]--init succ--", i)
