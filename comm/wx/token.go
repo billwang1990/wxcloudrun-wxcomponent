@@ -40,7 +40,7 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 
 	// 读数据库
 	record, found, err := dao.GetAccessToken(appid, tokenType)
-	log.Info("//wyq log 读数据库获取token")
+	log.Infof("//wyq log 读数据库获取token %+v", record)
 	if err != nil {
 		log.Info("//wyq log 读数据库获取token失败")
 		log.Error(err)
@@ -49,9 +49,11 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 	cacheDuration := 5 * time.Minute
 	if found && record.Expiretime.After(time.Now()) {
 		// 找到未超时的记录
+		log.Infof("//wyq log // 找到未超时的记录")
 		if d, _ := time.ParseDuration("5m"); record.Expiretime.Before(time.Now().Add(d)) {
 			// 5min后超时 按1/100的概率刷新
 			if rand.Seed(time.Now().UnixNano()); rand.Intn(100) == 0 {
+				log.Infof("//wyq log 5min后超时 按1/100的概率刷新")
 				go updateAccessToken(appid, tokenType)
 			}
 			// 缓存时间设为过期时间
