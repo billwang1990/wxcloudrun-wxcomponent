@@ -25,45 +25,46 @@ type wxCallbackBizRecord struct {
 }
 
 func postContent(content  string, token string) {
-	log.Infof("wyq-------// postContent %s", content)
-	    // 定义要发送的JSON数据
-		jsonData := []byte(`{
-			"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
-			"msgtype": "text",
-			"text": {
-				"content": "\n—————保罗AI客服回复"
-			}
-		}`)
-	
-		// 创建POST请求
-		url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
-		req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-		if err != nil {
-			fmt.Println("发送消息 失败 Error:", err)
-			return
+	log.Infof("wyq log 发送消息到公众号-------// postContent %s", content)
+	// 定义要发送的JSON数据
+	jsonData := []byte(`{
+		"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
+		"msgtype": "text",
+		"text": {
+			"content": "\n—————保罗AI客服回复"
 		}
-	
-		// 设置请求头
-		req.Header.Set("Content-Type", "application/json")
-	
-		// 发送请求
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
-		defer resp.Body.Close()
-	
-		// 读取响应数据
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
-	
-		// 打印响应数据
-		fmt.Println(string(body))
+	}`)
+
+	// 创建POST请求
+	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Infof("wyq log 发送消息到公众失败 step 1 %+v", err)
+		return
+	}
+
+	// 设置请求头
+	req.Header.Set("Content-Type", "application/json")
+
+	// 发送请求
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		
+		log.Infof("wyq log 发送消息到公众失败 step 2 %+v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// 读取响应数据
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Infof("wyq log 发送消息到公众失败 step 3 %+v", err)
+		return
+	}
+
+	// 打印响应数据
+	fmt.Println(string(body))
 }
 
 func bizHandler(c *gin.Context) {
@@ -94,10 +95,11 @@ func bizHandler(c *gin.Context) {
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
 
 	log.Infof("// wyq log BizGetComponentAccessToken r.Appid是 %s, token 是%s, err 是 %+v", r.Appid, token, err)
-	
+	if err == nil {
+		postContent("", token)
+
+	}
 	// mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
-	// postContent("", mytoken)
-	// log.Infof("wyq-------// 转发到用户配置的地址")
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {
