@@ -61,6 +61,7 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 		}
 		// 写缓存
 		cacheCli.Set(cacheKey, record.Token, cacheDuration)
+		log.Infof("//wyq log // 写缓存 %+v", cacheDuration)
 		return record.Token, nil
 	}
 	// 没有数据 重新获取
