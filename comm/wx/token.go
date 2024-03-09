@@ -42,7 +42,6 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 
 	// 读数据库
 	record, found, err := dao.GetAccessToken(appid, tokenType)
-	log.Infof("//wyq log 读数据库获取token %+v", record)
 	if err != nil {
 		log.Error(err)
 		return "", err
@@ -50,11 +49,10 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 	cacheDuration := 5 * time.Minute
 	if found && record.Expiretime.After(time.Now()) {
 		// 找到未超时的记录
-		log.Infof("//wyq log // 找到未超时的记录")
 		if d, _ := time.ParseDuration("5m"); record.Expiretime.Before(time.Now().Add(d)) {
 			// 5min后超时 按1/100的概率刷新
 			if rand.Seed(time.Now().UnixNano()); rand.Intn(100) == 0 {
-				log.Infof("//wyq log 5min后超时 按1/100的概率刷新")
+				log.Infof("//by wyq 5min后超时 按1/100的概率刷新")
 				go updateAccessToken(appid, tokenType)
 			}
 			// 缓存时间设为过期时间
@@ -62,11 +60,10 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 		}
 		// 写缓存
 		cacheCli.Set(cacheKey, record.Token, cacheDuration)
-		log.Infof("//wyq log // 写缓存 %+v", cacheDuration)
 		return record.Token, nil
 	}
 	// 没有数据 重新获取
-	log.Info("//wyq log 没有数据 重新获取")
+	log.Info("//by wyq 没有数据 重新获取")
 	token, err := updateAccessToken(appid, tokenType)
 	if err != nil {
 		log.Error(err)
@@ -88,9 +85,7 @@ func updateAccessToken(appid string, tokenType int) (string, error) {
 	defer dao.UnLock(lockKey)
 
 	// 请求新token
-	log.Info("//wyq log 请求新token")
 	token, err := getNewAccessToken(appid, tokenType)
-	log.Info("//wyq log 请求新token结果 ： " + token)
 	if err != nil {
 		log.Error(err)
 		return "", err
