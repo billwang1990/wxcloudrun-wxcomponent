@@ -93,16 +93,11 @@ func bizHandler(c *gin.Context) {
 	
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
 
-	log.Infof("r.Appid是 %s, token 是%s", r.Appid, token)
-	if err != nil {
-		log.Infof("数据库查询到的token是 %s", token)
-	} else {
-		log.Errorf("数据库查询到的token失败 ")
-		log.Error(err)
-	}
-	mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
-	postContent("", mytoken)
-	log.Infof("wyq-------// 转发到用户配置的地址")
+	log.Infof("// wyq log BizGetComponentAccessToken r.Appid是 %s, token 是%s, err 是 %+v", r.Appid, token, err)
+	
+	// mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
+	// postContent("", mytoken)
+	// log.Infof("wyq-------// 转发到用户配置的地址")
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {

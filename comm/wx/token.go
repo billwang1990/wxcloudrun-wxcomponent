@@ -44,7 +44,6 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 	record, found, err := dao.GetAccessToken(appid, tokenType)
 	log.Infof("//wyq log 读数据库获取token %+v", record)
 	if err != nil {
-		log.Info("//wyq log 读数据库获取token失败")
 		log.Error(err)
 		return "", err
 	}
