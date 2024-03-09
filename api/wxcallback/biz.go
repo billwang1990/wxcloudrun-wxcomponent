@@ -1,16 +1,16 @@
 package wxcallback
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-	"bytes"
-    "fmt"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/wx"
-	
+
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/dao"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/model"
 	"github.com/gin-gonic/gin"
@@ -22,49 +22,6 @@ type wxCallbackBizRecord struct {
 	ToUserName string `json:"ToUserName"`
 	MsgType    string `json:"MsgType"`
 	Event      string `json:"Event"`
-}
-
-func postContent(content  string, token string) {
-	log.Infof("wyq log 发送消息到公众号-------// postContent %s", content)
-	// 定义要发送的JSON数据
-	jsonData := []byte(`{
-		"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
-		"msgtype": "text",
-		"text": {
-			"content": "\n—————保罗AI客服回复"
-		}
-	}`)
-
-	// 创建POST请求
-	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-	if err != nil {
-		log.Infof("wyq log 发送消息到公众失败 step 1 %+v", err)
-		return
-	}
-
-	// 设置请求头
-	req.Header.Set("Content-Type", "application/json")
-
-	// 发送请求
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		
-		log.Infof("wyq log 发送消息到公众失败 step 2 %+v", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	// 读取响应数据
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Infof("wyq log 发送消息到公众失败 step 3 %+v", err)
-		return
-	}
-
-	// 打印响应数据
-	fmt.Println(string(body))
 }
 
 func bizHandler(c *gin.Context) {
@@ -87,19 +44,19 @@ func bizHandler(c *gin.Context) {
 	if json.CreateTime == 0 {
 		r.CreateTime = time.Unix(1, 0)
 	}
-	if err := dao.AddBizCallBackRecord(&r); err != nil {
-		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
-		return
-	}
-	
+
+	//暂时不存库
+	// if err := dao.AddBizCallBackRecord(&r); err != nil {
+	// 	c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
+	// 	return
+	// }
+
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
-
-	log.Infof("// wyq log BizGetComponentAccessToken r.Appid是 %s, token 是%s, err 是 %+v", r.Appid, token, err)
 	if err == nil {
-		postContent("", token)
-
+		go replyMsgIfNeeded(&r, token)
+	} else {
+		log.Errorf("获取appid: %s 的token失败: %+v", r.Appid, err)
 	}
-	// mytoken := "78_5GfpW-l8AuFN1wEf2V92PuCSZAyGj69-5yPwmY9jCG7yYnvSGCcOIMMzqq98ZHICJSBCRuDANl393G5tJIkxhtzFbP2qnv5wrmZWGelFjTpNN9t6bmK1Vef_GhcDEPhAHAHIT"
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {
@@ -109,5 +66,51 @@ func bizHandler(c *gin.Context) {
 	}
 	if !proxyOpen {
 		c.String(http.StatusOK, "success")
+	}
+}
+
+func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
+	if r.MsgType != "text" {
+		return nil
+	}
+	postContent("", token)
+	return nil
+}
+
+func postContent(content string, token string) {
+	// 定义要发送的JSON数据
+	jsonData := []byte(`{
+		"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
+		"msgtype": "text",
+		"text": {
+			"content": "\n—————保罗AI客服回复"
+		}
+	}`)
+
+	// 创建POST请求
+	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Errorf("发送消息到公众失败 step 1 %+v", err)
+		return
+	}
+
+	// 设置请求头
+	req.Header.Set("Content-Type", "application/json")
+
+	// 发送请求
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Errorf("发送消息到公众失败 step 2 %+v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// 读取响应数据
+	_, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("发送消息到公众失败 step 3 %+v", err)
+		return
 	}
 }
