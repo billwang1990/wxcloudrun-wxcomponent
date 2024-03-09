@@ -40,7 +40,9 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 
 	// 读数据库
 	record, found, err := dao.GetAccessToken(appid, tokenType)
+	log.Info("//wyq log 读数据库获取token")
 	if err != nil {
+		log.Info("//wyq log 读数据库获取token失败")
 		log.Error(err)
 		return "", err
 	}
@@ -60,6 +62,7 @@ func getAccessToken(appid string, tokenType int) (string, error) {
 		return record.Token, nil
 	}
 	// 没有数据 重新获取
+	log.Info("//wyq log 没有数据 重新获取")
 	token, err := updateAccessToken(appid, tokenType)
 	if err != nil {
 		log.Error(err)
@@ -81,7 +84,9 @@ func updateAccessToken(appid string, tokenType int) (string, error) {
 	defer dao.UnLock(lockKey)
 
 	// 请求新token
+	log.Info("//wyq log 请求新token")
 	token, err := getNewAccessToken(appid, tokenType)
+	log.Info("//wyq log 请求新token结果 ： " + token)
 	if err != nil {
 		log.Error(err)
 		return "", err

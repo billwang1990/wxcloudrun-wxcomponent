@@ -111,7 +111,6 @@ func bizHandler(c *gin.Context) {
 		return
 	}
 	if !proxyOpen {
-		log.Infof("wyq-------// proxyOpen")
 		c.String(http.StatusOK, "success")
 	}
 }
