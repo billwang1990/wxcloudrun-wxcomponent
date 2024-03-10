@@ -95,17 +95,8 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 	}
 	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)
 	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
-	postContent(msg.FromUserName, "测试内容", token)
+	postContent(msg.FromUserName, msg.Content, token)
 	return nil
-}
-
-func chatBot() {
-	// const data = {
-	// 	"sessionId": FromUserName,
-	// 	"question": Content,
-	// 	"botId": "0705BpLnfgDs",
-	// 	"dec": true
-	// }
 }
 
 func postContent(to, content string, token string) {
@@ -116,12 +107,13 @@ func postContent(to, content string, token string) {
         },
     }
     data["touser"] = to
-	log.Infof("send content %s to %s", content, to)
     jsonData, err := json.Marshal(data)
     if err != nil {
-        log.Errorf("JSON编码失败: %+v", err)
+		log.Errorf("JSON编码失败: %+v", err)
         return
     }
+	
+	log.Infof("send content %s to %+v", content,jsonData)
 
 	// 创建POST请求
 	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
