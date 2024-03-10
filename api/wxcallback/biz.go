@@ -143,7 +143,12 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question string) {
 		log.Errorf("发送消息到talks ai 失败 step 3 %+v", err)
 		return
 	}
-	log.Infof("发送talks ai 结果 %+v", body)
+	var json interface{}
+	if err := binding.JSON.BindBody(body, &json); err != nil {
+		log.Errorf("发送talks ai失败 %+v", err)
+		return
+	}
+	log.Infof("发送talks ai 结果 %+v", json)
 }
 
 func postContent(to, content string, token string) {
