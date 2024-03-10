@@ -170,8 +170,6 @@ func postContent(to, content string, token string) {
 		return
 	}
 
-	log.Infof("send content %s to %+v", content, jsonData)
-
 	// 创建POST请求
 	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
@@ -204,5 +202,5 @@ func postContent(to, content string, token string) {
 		log.Errorf("发送消息到公众号失败 %+v", err)
 		return
 	}
-	log.Infof("发送公众号消息结果 %+v", body)
+	log.Infof("发送公众号消息结果 %+v", json)
 }
