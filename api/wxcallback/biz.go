@@ -2,6 +2,7 @@ package wxcallback
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -69,6 +70,21 @@ func bizHandler(c *gin.Context) {
 }
 
 func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
+	type Message struct {
+		ToUserName   string `json:"ToUserName"`
+		FromUserName string `json:"FromUserName"`
+		CreateTime   int64  `json:"CreateTime"`
+		MsgType      string `json:"MsgType"`
+		Content      string `json:"Content"`
+		MsgId        int64  `json:"MsgId"`
+	}
+	var msg Message
+    err := json.Unmarshal([]byte(r.PostBody), &msg)
+    if err != nil {
+		log.Error(err)
+        return err
+    }
+
 	if r.MsgType != "text" {
 		return nil
 	}
@@ -77,10 +93,9 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 		log.Error(err)
 		return err
 	}
-	log.Infof("查询到该公众号有绑定AI客服 %+v, %s xxx", bot, r.PostBody)
-
+	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)
 	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
-	// postContent("", token)
+	postContent(msg.FromUserName, "测试内容", token)
 	return nil
 }
 
@@ -93,16 +108,20 @@ func chatBot() {
 	// }
 }
 
-func postContent(content string, token string) {
-
-	// 定义要发送的JSON数据
-	jsonData := []byte(`{
-		"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
-		"msgtype": "text",
-		"text": {
-			"content": "\n—————保罗AI客服回复"
-		}
-	}`)
+func postContent(to, content string, token string) {
+    data := map[string]interface{}{
+        "msgtype": "text",
+        "text": map[string]string{
+            "content": content,
+        },
+    }
+    data["touser"] = to
+	log.Infof("send content %s to %s", content, to)
+    jsonData, err := json.Marshal(data)
+    if err != nil {
+        log.Errorf("JSON编码失败: %+v", err)
+        return
+    }
 
 	// 创建POST请求
 	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token
