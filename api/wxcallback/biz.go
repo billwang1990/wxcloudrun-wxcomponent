@@ -31,6 +31,7 @@ func bizHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
+	log.Infof("bound body %+v", json)
 	r := model.WxCallbackBizRecord{
 		CreateTime:  time.Unix(json.CreateTime, 0),
 		ReceiveTime: time.Now(),
