@@ -38,6 +38,7 @@ func BindBot(c *gin.Context) {
 	}
 	// query cached appid
 	record, err := dao.GetAuthRecordByCode(json.AuthCode)
+	log.Infof("query cached appid %+v", record)
 	if err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
@@ -48,6 +49,7 @@ func BindBot(c *gin.Context) {
 		AppID: record.AuthorizerAppid,
 	}); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+		return
 	}
 	c.JSON(http.StatusOK, errno.OK.WithData(gin.H{"msg": "", "data": "success", "code": 0}))
 }
