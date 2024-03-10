@@ -44,7 +44,11 @@ func bizHandler(c *gin.Context) {
 		r.CreateTime = time.Unix(1, 0)
 	}
 	
-	log.Infof("bound body %+v record to store is %+v", json, r)
+	log.Infof("bound body %+v record to store is %+v", json, r.PostBody)
+
+	for k, v := range c.Request.Header {
+		log.Debugf("xxxxxxxxxxx  %s %s", k, v)
+	}
 	if err := dao.AddBizCallBackRecord(&r); err != nil {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
@@ -84,7 +88,17 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 	return nil
 }
 
+func chatBot() {
+	// const data = {
+	// 	"sessionId": FromUserName,
+	// 	"question": Content,
+	// 	"botId": "0705BpLnfgDs",
+	// 	"dec": true
+	// }
+}
+
 func postContent(content string, token string) {
+
 	// 定义要发送的JSON数据
 	jsonData := []byte(`{
 		"touser": "oDYseuFGkl2rn5zdi_Ve_I6vAwr4",
