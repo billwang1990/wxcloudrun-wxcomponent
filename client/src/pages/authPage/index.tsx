@@ -24,15 +24,18 @@ export default function AuthPage() {
             if (resp.data.redirectUrl) {
                 redirectUrl = resp.data.redirectUrl.includes(window.location.origin) ? resp.data.redirectUrl : `${window.location.origin}/#${routes.redirectPage.path}`;
             } 
-
                 // 如果 resp.data.redirectUrl 为空，则从当前页面链接获取 redirect_url 参数
                 const urlParams = new URLSearchParams(window.location.search);
+                console.log("window.location---", window.location)
                 const urlRedirectUrl = urlParams.get('redirect_url');
                 if (urlRedirectUrl) {
                     redirectUrl = urlRedirectUrl;
+                    console.log("浏览器获取的重定向链接", redirectUrl)
                 }
             if (resp1.code === 0) {
-                window.location.href = `https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=${resp.data.appid}&pre_auth_code=${resp1.data.preAuthCode}&auth_type=6&redirect_uri=${encodeURIComponent(redirectUrl)}`
+                setTimeout(() => {
+                    window.location.href = `https://open.weixin.qq.com/wxaopen/safe/bindcomponent?component_appid=${resp.data.appid}&pre_auth_code=${resp1.data.preAuthCode}&auth_type=6&redirect_uri=${encodeURIComponent(redirectUrl)}#wechat_redirect`
+                }, 3000);
             }
         }
     }
