@@ -26,6 +26,7 @@ export default function AuthPageH5() {
 
                 // 如果 resp.data.redirectUrl 为空，则从当前页面链接获取 redirect_url 参数
                 const urlParams = new URLSearchParams(window.location.search);
+                console.log("window.location---", window.location)
                 const urlRedirectUrl = urlParams.get('redirect_url');
                 if (urlRedirectUrl) {
                     redirectUrl = urlRedirectUrl;
