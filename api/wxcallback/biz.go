@@ -45,11 +45,10 @@ func bizHandler(c *gin.Context) {
 		r.CreateTime = time.Unix(1, 0)
 	}
 
-	//暂时不存库
-	// if err := dao.AddBizCallBackRecord(&r); err != nil {
-	// 	c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
-	// 	return
-	// }
+	if err := dao.AddBizCallBackRecord(&r); err != nil {
+		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
+		return
+	}
 
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
 	if err == nil {

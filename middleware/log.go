@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	// "github.com/WeixinCloud/wxcloudrun-wxcompo	nent/comm/log"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,13 +16,13 @@ func LogMiddleWare(c *gin.Context) {
 		(len(c.Request.Header["Content-Type"]) > 0 &&
 			strings.Contains(strings.ToLower(c.Request.Header["Content-Type"][0]), "application/json")) {
 		body, _ := ioutil.ReadAll(c.Request.Body)
-		// log.Debugf("body: %s", string(body))
+		log.Debugf("body: %s", string(body))
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 	}
 
-	// log.Debugf("%s", "---header---")
-	// for k, v := range c.Request.Header {
-	// 	log.Debugf("%s %s", k, v)
-	// }
-	// log.Debugf("%s", "---header---")
+	log.Debugf("%s", "---header---")
+	for k, v := range c.Request.Header {
+		log.Debugf("%s %s", k, v)
+	}
+	log.Debugf("%s", "---header---")
 }
