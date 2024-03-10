@@ -29,6 +29,7 @@ export default function RedirectPage() {
                 const finalUrl = `${redirectUrl}?${hashParams.toString()}`;
 
                 console.log(finalUrl);
+                window.location.href = finalUrl;
             } else {
                 window.location.href = resp.data.redirectUrl + window.location.hash.replaceAll(`#${routes.redirectPage.path}`, '')
             }
