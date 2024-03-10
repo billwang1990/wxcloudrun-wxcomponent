@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
 	wxbase "github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/wx/base"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/dao"
@@ -19,5 +20,6 @@ func getComponentInfoHandler(c *gin.Context) {
 		return
 	}
 	mapResult["appid"] = wxbase.GetAppid()
+	log.Infof("wyq getComponentInfoHandler %+v",mapResult)
 	c.JSON(http.StatusOK, errno.OK.WithData(mapResult))
 }

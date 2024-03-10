@@ -105,6 +105,7 @@ func newAuthHander(body *[]byte) error {
 	if err = binding.JSON.BindBody(*body, &record); err != nil {
 		return err
 	}
+	log.Infof("wyq newAuthHander %+v", record)
 	if refreshtoken, err = queryAuth(record.AuthorizationCode); err != nil {
 		return err
 	}
