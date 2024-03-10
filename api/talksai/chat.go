@@ -6,12 +6,13 @@ import (
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
-	"github.com/gin-gonic/gin/binding"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/dao"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/model"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 type bindingBot struct {
-	BotID    int64    `json:"botid"`
 	AuthCode string   `json:"code"`
 	Filters  []string `json:"filters"`
 	Prefix   string   `json:"prefix"`
@@ -30,5 +31,17 @@ func BindBot(c *gin.Context) {
 		return
 	}
 	log.Infof("Prepare binding bot %+v", json)
+	botid := c.Param("botid")
+	if botid == "" {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData("invalid botid"))
+		return
+	}
+	// query cached appid 
+	
+	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
+		BotID: botid,
+	}); err != nil {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+	}
 	c.JSON(http.StatusOK, errno.OK.WithData(gin.H{"msg": "", "data": "success", "code": 0}))
 }
