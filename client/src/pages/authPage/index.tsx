@@ -29,14 +29,11 @@ export default function AuthPage() {
                 const redirectUri = url.hash.slice(25)
                 if (redirectUri && redirectUri != '') {
                   redirectUrl = redirectUri;
-                  console.log("浏览器获取的重定向链接", redirectUrl)
                 }            
             }
-            // if (resp1.code === 0) {
-            //     setTimeout(() => {
-            //         window.location.href = `https://open.weixin.qq.com/wxaopen/safe/bindcomponent?component_appid=${resp.data.appid}&pre_auth_code=${resp1.data.preAuthCode}&auth_type=6&redirect_uri=${encodeURIComponent(redirectUrl)}#wechat_redirect`
-            //     }, 10000);
-            // }
+            if (resp1.code === 0) {
+                window.location.href = `https://open.weixin.qq.com/wxaopen/safe/bindcomponent?component_appid=${resp.data.appid}&pre_auth_code=${resp1.data.preAuthCode}&auth_type=6&redirect_uri=${encodeURIComponent(redirectUrl)}#wechat_redirect`
+            }
         }
     }
 
