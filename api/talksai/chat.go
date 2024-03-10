@@ -36,10 +36,16 @@ func BindBot(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData("invalid botid"))
 		return
 	}
-	// query cached appid 
-	
+	// query cached appid
+	record, err := dao.GetAuthRecordByCode(json.AuthCode)
+	if err != nil {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+		return
+	}
+
 	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
 		BotID: botid,
+		AppID: record.AuthorizerAppid,
 	}); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 	}

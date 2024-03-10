@@ -26,7 +26,6 @@ func getAccessTokenWithRetry(appid string, tokenType int) (string, error) {
 		}
 		break
 	}
-	log.Infof("// wyq log getAccessTokenWithRetry %s %+v", token, err)
 	
 	return token, err
 }
