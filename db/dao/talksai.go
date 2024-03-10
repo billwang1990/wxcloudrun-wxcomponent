@@ -21,3 +21,14 @@ func CreateOrUpdateTalksAIBot(record *model.TalksAIBot) error {
 	}
 	return nil
 }
+
+func GetTalksAIbot(appid string) (*model.TalksAIBot, error) {
+	var err error
+	var bot model.TalksAIBot
+	cli := db.Get()
+	if err = cli.Table(talksaiBotTableName).Where("`appid` = ?", appid).Take(&bot).Error; err != nil {
+		log.Error(err.Error())
+		return nil, err
+	}
+	return &bot, nil
+}
