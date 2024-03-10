@@ -44,7 +44,7 @@ func bizHandler(c *gin.Context) {
 		r.CreateTime = time.Unix(1, 0)
 	}
 	
-	log.Infof("bound body %+v record to store is %+v", json, r.PostBody)
+	log.Infof("bound body %+v record to store is %+v <-------", json, r.PostBody)
 
 	for k, v := range c.Request.Header {
 		log.Debugf("xxxxxxxxxxx  %s %s", k, v)
