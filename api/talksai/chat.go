@@ -7,6 +7,7 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/gin-gonic/gin"
 )
 
 type bindingBot struct {
