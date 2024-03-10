@@ -45,10 +45,6 @@ func bizHandler(c *gin.Context) {
 	}
 	
 	log.Infof("bound body %+v record to store is %+v <-------", json, r.PostBody)
-
-	for k, v := range c.Request.Header {
-		log.Debugf("xxxxxxxxxxx  %s %s", k, v)
-	}
 	if err := dao.AddBizCallBackRecord(&r); err != nil {
 		c.JSON(http.StatusOK, errno.ErrSystemError.WithData(err.Error()))
 		return
@@ -81,7 +77,7 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 		log.Error(err)
 		return err
 	}
-	log.Infof("查询到该公众号有绑定AI客服 %+v", bot)
+	log.Infof("查询到该公众号有绑定AI客服 %+v, %s xxx", bot, r.PostBody)
 
 	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
 	// postContent("", token)
