@@ -8,15 +8,15 @@ import (
 
 const cacheTmpAppidWithCode = "cacheTmpAppidWithCode"
 
-type newAuthRecord struct {
-	CreateTime                   int64  `json:"CreateTime"`
-	AuthorizerAppid              string `json:"AuthorizerAppid"`
-	AuthorizationCode            string `json:"AuthorizationCode"`
-	AuthorizationCodeExpiredTime int64  `json:"AuthorizationCodeExpiredTime"`
+// WxCallbackRule 回调消息转发规则
+type CacheNewAuthRecord struct {
+	AuthorizerAppid   string `gorm:"column:appid" json:"appid"`
+	AuthorizationCode string `gorm:"column:appcode" json:"appcode"`
 }
 
 // CreateOrUpdateAuthorizerRecord 创建或更新授权账号信息
-func CreateOrUpdateAuthorizerAppWithCode(record *newAuthRecord) error {
+func CreateOrUpdateAuthorizerAppWithCode(appid string, authCode string) error {
+	record := &CacheNewAuthRecord{AuthorizerAppid: appid, AuthorizationCode: authCode}
 	var err error
 	cli := db.Get()
 	if err = cli.Table(cacheTmpAppidWithCode).Clauses(clause.OnConflict{
@@ -27,4 +27,3 @@ func CreateOrUpdateAuthorizerAppWithCode(record *newAuthRecord) error {
 	}
 	return nil
 }
-
