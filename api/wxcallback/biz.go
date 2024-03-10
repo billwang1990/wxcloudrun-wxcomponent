@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
@@ -95,8 +96,55 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 	}
 	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)
 	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
-	postContent(msg.FromUserName, msg.Content, token)
+	gptReplyIfNeeded(bot, msg.FromUserName, msg.Content)
+	// postContent(msg.FromUserName, msg.Content, token)
 	return nil
+}
+
+func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question string) {
+	if bot.Filters != "" {
+		//Check filter
+	}
+	reqGpt := map[string]interface{}{
+        "sessionId": toUser,
+		"question": question,
+		"botId": bot.BotID,
+		"dec": true,
+    }
+
+	jsonData, err := json.Marshal(reqGpt)
+    if err != nil {
+		log.Errorf("JSON编码失败: %+v", err)
+        return
+    }
+
+	url := "https://backend.talks-ai.com/api/chat"
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Errorf("发送消息到talks ai 失败 step 1 %+v", err)
+		return
+	}
+
+	// 设置请求头
+	req.Header.Set("Content-Type", "application/json")
+
+	// 发送请求
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Errorf("发送消息到talks ai 失败 step 2 %+v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// 读取响应数据
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("发送消息到talks ai 失败 step 3 %+v", err)
+		return
+	}
+	log.Infof("发送talks ai 结果 %+v", body)
 }
 
 func postContent(to, content string, token string) {
@@ -136,9 +184,11 @@ func postContent(to, content string, token string) {
 	defer resp.Body.Close()
 
 	// 读取响应数据
-	_, err = ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Errorf("发送消息到公众失败 step 3 %+v", err)
 		return
 	}
+
+	log.Infof("发送公众号消息结果 %+v", body)
 }
