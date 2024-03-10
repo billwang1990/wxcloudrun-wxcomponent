@@ -21,16 +21,16 @@ export default function AuthPage() {
                 noNeedCheckLogin: true
             })
             
-            if (resp.data.redirectUrl) {
+            if (resp.data.redirectUrl && resp.data.redirectUrl != "") {
                 redirectUrl = resp.data.redirectUrl.includes(window.location.origin) ? resp.data.redirectUrl : `${window.location.origin}/#${routes.redirectPage.path}`;
-            } 
+            } else {
                 // 如果 resp.data.redirectUrl 为空，则从当前页面链接获取 redirect_url 参数
-            const url = new URL(window.location.href);
-            console.log("window.location---", window.location, url)
-            const redirectUri = url.searchParams.get('redirect_uri');
-            if (redirectUri) {
-              redirectUrl = redirectUri;
-              console.log("浏览器获取的重定向链接", redirectUrl)
+                const url = new URL(window.location.href);
+                const redirectUri = url.hash.slice(25)
+                if (redirectUri && redirectUri != '') {
+                  redirectUrl = redirectUri;
+                  console.log("浏览器获取的重定向链接", redirectUrl)
+                }            
             }
             // if (resp1.code === 0) {
             //     setTimeout(() => {
