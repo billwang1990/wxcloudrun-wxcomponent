@@ -15,7 +15,8 @@ export default function RedirectPage() {
             noNeedCheckLogin: true
         })
         if (resp.code === 0) {
-            window.location.href = resp.data.redirectUrl + window.location.hash.replaceAll(`#${routes.redirectPage.path}`, '')
+            console.log("xxxxxx", window.location.href)
+            // window.location.href = resp.data.redirectUrl + window.location.hash.replaceAll(`#${routes.redirectPage.path}`, '')
         }
     }
 

@@ -29,7 +29,7 @@ export default function AuthPage() {
                 const url = new URL(window.location.href);
                 const redirectUri = url.hash.slice(25)
                 if (redirectUri && redirectUri != '') {
-                  redirectUrl = redirectUri;
+                  redirectUrl = `${window.location.origin}/#${routes.redirectPage.path}?redirect_url=${redirectUri}`;
                   console.log("浏览器带的", redirectUrl)
                 }            
             }
