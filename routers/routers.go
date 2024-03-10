@@ -7,6 +7,7 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/authpage"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/innerservice"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/proxy"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/talksai"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/wxcallback"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/middleware"
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,8 @@ func Init() *gin.Engine {
 
 	// 微信消息推送
 	wxcallback.Routers(r)
-
+	talksai.Routers(r)
+	
 	// 微管家
 	Include(admin.Routers, authpage.Routers)
 	g := r.Group("/wxcomponent")

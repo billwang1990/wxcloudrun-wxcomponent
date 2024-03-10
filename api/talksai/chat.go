@@ -17,8 +17,11 @@ type bindingBot struct {
 	Suffix   string   `json:"suffix"`
 }
 
-func ConfigAutoReply(c *gin.Context) {
+func QueryBindBot(c *gin.Context) {
 
+}
+
+func BindBot(c *gin.Context) {
 	body, _ := ioutil.ReadAll(c.Request.Body)
 	var json bindingBot
 	if err := binding.JSON.BindBody(body, &json); err != nil {

@@ -7,5 +7,6 @@ import (
 // Routers 路由
 func Routers(e *gin.Engine) {
 	g := e.Group("/ai")
-	g.POST("/binding/:botid", ConfigAutoReply)
+	g.POST("/binding/:botid", BindBot)
+	g.GET("/binding/:botid", QueryBindBot)
 }
