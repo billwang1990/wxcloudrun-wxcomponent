@@ -105,7 +105,13 @@ func newAuthHander(body *[]byte) error {
 	if err = binding.JSON.BindBody(*body, &record); err != nil {
 		return err
 	}
-	log.Infof("wyq newAuthHander %+v", record)
+	go func() {
+		//{CreateTime:1710058077 AuthorizerAppid:wxc9a70dc0a1542ba9 AuthorizationCode:queryauthcode@@@fMSudJJOuB7oJXHWMKvSDvAHGgPBnb9YH4wXvoBYZ2BDxDWDHieK6FShvAtJvMOpFqxmy79VlA1G_vpsESRArQ AuthorizationCodeExpiredTime:1710061677}
+		err := dao.CreateOrUpdateAuthorizerAppWithCode((*dao.newAuthRecord)(&record))
+		if err != nil {
+			log.Errorf("use side effect cache auth record failed %+v", err)
+		}
+	}()
 	if refreshtoken, err = queryAuth(record.AuthorizationCode); err != nil {
 		return err
 	}
