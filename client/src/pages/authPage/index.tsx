@@ -23,7 +23,7 @@ export default function AuthPage() {
             
             if (resp.data.redirectUrl && resp.data.redirectUrl != "") {
                 redirectUrl = resp.data.redirectUrl.includes(window.location.origin) ? resp.data.redirectUrl : `${window.location.origin}/#${routes.redirectPage.path}`;
-                console.log("数据库的", redirectUrl)
+                console.log("数据库的", redirectUrl, resp.data)
             } else {
                 // 如果 resp.data.redirectUrl 为空，则从当前页面链接获取 redirect_url 参数
                 const url = new URL(window.location.href);
