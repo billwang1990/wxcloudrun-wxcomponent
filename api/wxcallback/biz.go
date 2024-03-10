@@ -2,7 +2,6 @@ package wxcallback
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -11,7 +10,6 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/wx"
 
-	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/dao"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -73,6 +71,7 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 	if r.MsgType != "text" {
 		return nil
 	}
+	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
 	// postContent("", token)
 	return nil
 }
