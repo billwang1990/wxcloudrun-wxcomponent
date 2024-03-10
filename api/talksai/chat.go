@@ -47,9 +47,12 @@ func BindBot(c *gin.Context) {
 	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
 		BotID: botid,
 		AppID: record.AuthorizerAppid,
+		Filters: json.Filters,
+		Prefix: json.Prefix,
+		Suffix: json.Suffix,
 	}); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
-	c.JSON(http.StatusOK, errno.OK.WithData(gin.H{"msg": "", "data": "success", "code": 0}))
+	c.JSON(http.StatusOK, errno.OK)
 }
