@@ -86,18 +86,18 @@ func BindBot(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
-
-	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
+	b := &model.TalksAIBot{
 		BotID:   botid,
 		AppID:   record.AuthorizerAppid,
 		Filters: json.Filters,
 		Prefix:  json.Prefix,
 		Suffix:  json.Suffix,
-	}); err != nil {
+	}
+	if err := dao.CreateOrUpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
 
-	c.JSON(http.StatusOK, errno.OK)
+	c.JSON(http.StatusOK, errno.OK.WithData(b))
 	go dao.DeleteCachedAuthorizerAppRecord(record.AuthorizerAppid)
 }
