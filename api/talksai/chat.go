@@ -19,8 +19,51 @@ type bindingBot struct {
 	Suffix   string `json:"suffix"`
 }
 
-func QueryBindBot(c *gin.Context) {
+func QueryBoundBot(c *gin.Context) {
+	botid := c.Param("botid")
+	bot, err := dao.GetTalksAIbot(botid)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusOK, errno.ErrSystemError)
+		return
+	}
+	c.JSON(http.StatusOK, errno.OK.WithData(bot))
+}
 
+func DeteleBoundBot(c *gin.Context) {
+	botid := c.Param("botid")
+	err := dao.DeleteTalksAIBot(botid)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusOK, errno.ErrSystemError)
+		return
+	}
+	c.JSON(http.StatusOK, errno.OK)
+}
+
+func UpdateBot(c *gin.Context) {
+	body, _ := ioutil.ReadAll(c.Request.Body)
+	var json bindingBot
+	if err := binding.JSON.BindBody(body, &json); err != nil {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+		return
+	}
+	botid := c.Param("botid")
+	if botid == "" {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData("invalid botid"))
+		return
+	}
+
+	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
+		BotID:   botid,
+		Filters: json.Filters,
+		Prefix:  json.Prefix,
+		Suffix:  json.Suffix,
+	}); err != nil {
+		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, errno.OK)
 }
 
 func BindBot(c *gin.Context) {

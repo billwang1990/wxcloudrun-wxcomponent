@@ -44,3 +44,15 @@ func DeleteTalksAIBot(appid string) error {
 	}
 	return nil
 }
+
+func DeleteTalksAIBotByBot(botid string) error {
+	var err error
+
+	cli := db.Get()
+	if err = cli.Table(talksaiBotTableName).
+		Where("botid = ?", botid).Delete(model.TalksAIBot{}).Error; err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
