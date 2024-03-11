@@ -9,7 +9,7 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/proxy"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/talksai"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/wxcallback"
-	"github.com/WeixinCloud/wxcloudrun-wxcomponent/middleware"
+	// "github.com/WeixinCloud/wxcloudrun-wxcomponent/middleware"
 	"github.com/gin-gonic/gin"
 )
 
