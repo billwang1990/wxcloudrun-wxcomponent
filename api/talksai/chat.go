@@ -37,7 +37,7 @@ func BindBot(c *gin.Context) {
 		return
 	}
 	// query cached appid
-	record, err := dao.GetAuthRecordByCode(json.AuthCode)
+	record, err := dao.GetCachedAuthorizerAppRecordByCode(json.AuthCode)
 	log.Infof("query cached appid %+v", record)
 	if err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
@@ -54,5 +54,7 @@ func BindBot(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
+
 	c.JSON(http.StatusOK, errno.OK)
+	go dao.DeleteCachedAuthorizerAppRecord(record.AuthorizerAppid)
 }

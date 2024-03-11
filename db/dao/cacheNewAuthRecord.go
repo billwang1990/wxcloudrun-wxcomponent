@@ -10,7 +10,7 @@ import (
 const cacheTmpAppidWithCode = "cache_appid_code"
 
 // CreateOrUpdateAuthorizerRecord 创建或更新授权账号信息
-func CreateOrUpdateAuthorizerAppWithCode(appid string, authCode string) error {
+func CreateOrUpdateCachedAuthorizerAppWithCode(appid string, authCode string) error {
 	record := &model.CacheNewAuthRecord{AuthorizerAppid: appid, AuthorizationCode: authCode}
 	var err error
 	cli := db.Get()
@@ -23,7 +23,19 @@ func CreateOrUpdateAuthorizerAppWithCode(appid string, authCode string) error {
 	return nil
 }
 
-func GetAuthRecordByCode(code string) (*model.CacheNewAuthRecord, error) {
+func DeleteCachedAuthorizerAppRecord(appid string) error {
+	var err error
+
+	cli := db.Get()
+	if err = cli.Table(cacheTmpAppidWithCode).
+		Where("appid = ?", appid).Delete(model.CacheNewAuthRecord{}).Error; err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func GetCachedAuthorizerAppRecordByCode(code string) (*model.CacheNewAuthRecord, error) {
 	var err error
 	var kv model.CacheNewAuthRecord
 	cli := db.Get()
