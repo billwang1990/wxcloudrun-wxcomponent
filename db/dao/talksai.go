@@ -22,6 +22,24 @@ func CreateOrUpdateTalksAIBot(record *model.TalksAIBot) error {
 	return nil
 }
 
+func UpdateTalksAIBot(record *model.TalksAIBot) error {
+    cli := db.Get()
+    err := cli.Table(talksaiBotTableName).
+        Where("botid = ?", record.BotID).
+        Updates(map[string]interface{}{
+            "filters": record.Filters,
+            "prefix":  record.Prefix,
+            "suffix":  record.Suffix,
+        }).Error
+
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+
+    return nil
+}
+
 func GetTalksAIbot(appid string) (*model.TalksAIBot, error) {
 	var err error
 	var bot model.TalksAIBot

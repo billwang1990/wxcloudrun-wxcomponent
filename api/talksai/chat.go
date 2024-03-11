@@ -54,7 +54,7 @@ func UpdateBot(c *gin.Context) {
 		return
 	}
 
-	if err := dao.CreateOrUpdateTalksAIBot(&model.TalksAIBot{
+	if err := dao.UpdateTalksAIBot(&model.TalksAIBot{
 		BotID:   botid,
 		Filters: json.Filters,
 		Prefix:  json.Prefix,
