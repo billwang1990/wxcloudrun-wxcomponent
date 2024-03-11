@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
@@ -101,7 +102,16 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 	if bot.Filters != "" {
 		//Check filter
+		skip := true
+		for _, filter := range strings.Split(bot.Filters, ";") {
+			if strings.Contains(question, filter) {
+				skip = false
+				break
+			}
+		}
+		if skip { return }
 	}
+
 	reqGpt := map[string]interface{}{
 		"sessionId": toUser,
 		"question":  question,
@@ -151,7 +161,14 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 	}
 	log.Infof("发送talks ai 结果 %+v", json)
 	if json.Code == 0 {
-		postContent(toUser, json.Data, token)
+		content := json.Data
+		if bot.Prefix != "" {
+			content = bot.Prefix + content
+		}
+		if bot.Suffix != "" {
+			content = content + bot.Suffix
+		}
+		postContent(toUser, content, token)
 	}
 }
 
