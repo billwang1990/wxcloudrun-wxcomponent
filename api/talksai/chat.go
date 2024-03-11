@@ -24,7 +24,7 @@ func QueryBoundBot(c *gin.Context) {
 	bot, err := dao.GetTalksAIbotByBot(botid)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, errno.ErrSystemError)
+		c.JSON(http.StatusOK, errno.ErrRequestErr.WithData(err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, errno.OK.WithData(bot))
