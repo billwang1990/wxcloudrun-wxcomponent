@@ -168,6 +168,7 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		if bot.Suffix != "" {
 			content = content + bot.Suffix
 		}
+		log.Infof("向 %s发送消息：%s", toUser, content)
 		postContent(toUser, content, token)
 	}
 }
