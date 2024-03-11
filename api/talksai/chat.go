@@ -53,17 +53,18 @@ func UpdateBot(c *gin.Context) {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData("invalid botid"))
 		return
 	}
-
-	if err := dao.UpdateTalksAIBot(&model.TalksAIBot{
+	b := &model.TalksAIBot{
 		BotID:   botid,
 		Filters: json.Filters,
 		Prefix:  json.Prefix,
 		Suffix:  json.Suffix,
-	}); err != nil {
+	}
+	if err := dao.UpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
 		return
 	}
-	c.JSON(http.StatusOK, errno.OK)
+
+	c.JSON(http.StatusOK, errno.OK.WithData(b))
 }
 
 func BindBot(c *gin.Context) {
