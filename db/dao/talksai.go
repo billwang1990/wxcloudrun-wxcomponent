@@ -51,6 +51,17 @@ func GetTalksAIbot(appid string) (*model.TalksAIBot, error) {
 	return &bot, nil
 }
 
+func GetTalksAIbotByBot(botid string) (*model.TalksAIBot, error) {
+	var err error
+	var bot model.TalksAIBot
+	cli := db.Get()
+	if err = cli.Table(talksaiBotTableName).Where("`botid` = ?", botid).Take(&bot).Error; err != nil {
+		log.Error(err.Error())
+		return nil, err
+	}
+	return &bot, nil
+}
+
 func DeleteTalksAIBot(appid string) error {
 	var err error
 

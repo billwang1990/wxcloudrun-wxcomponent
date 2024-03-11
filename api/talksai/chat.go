@@ -21,7 +21,7 @@ type bindingBot struct {
 
 func QueryBoundBot(c *gin.Context) {
 	botid := c.Param("botid")
-	bot, err := dao.GetTalksAIbot(botid)
+	bot, err := dao.GetTalksAIbotByBot(botid)
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusOK, errno.ErrSystemError)
@@ -32,7 +32,7 @@ func QueryBoundBot(c *gin.Context) {
 
 func DeteleBoundBot(c *gin.Context) {
 	botid := c.Param("botid")
-	err := dao.DeleteTalksAIBot(botid)
+	err := dao.DeleteTalksAIBotByBot(botid)
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusOK, errno.ErrSystemError)
