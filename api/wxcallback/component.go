@@ -182,5 +182,7 @@ func unAuthHander(body *[]byte) error {
 		log.Errorf("DelAuthorizerRecord err %v", err)
 		return err
 	}
+	go dao.DeleteTalksAIBot(record.AuthorizerAppid)
+
 	return nil
 }
