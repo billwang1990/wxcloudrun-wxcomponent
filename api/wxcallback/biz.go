@@ -114,9 +114,10 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 			FromUserName: msg.ToUserName,
 			CreateTime:   msg.CreateTime,
 			MsgType:      "text",
-			Content:      "你好我收到了你的消息",
+			Content:      "消息已经收到",
 		}
 
+		log.Infof("测试被动回复消息 +%v", replyMsg)
 		c.XML(http.StatusOK, replyMsg)
 
 		// // 将回复消息编码为XML格式
@@ -127,7 +128,6 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		// }
 
 		// 设置响应头并返回XML数据
-		// log.Infof("测试被动回复消息 +%v", replyMsg)
 
 		// msg, err := xml.Marshal(&replyMsg)
 		// if err != nil {
