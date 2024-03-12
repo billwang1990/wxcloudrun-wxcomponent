@@ -60,7 +60,6 @@ func bizHandler(c *gin.Context) {
 	} else {
 		log.Errorf("获取appid: %s 的token失败: %+v", r.Appid, err)
 	}
-	return
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {
@@ -74,7 +73,6 @@ func bizHandler(c *gin.Context) {
 }
 
 func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context) error {
-	return nil
 	type Message struct {
 		ToUserName   string `json:"ToUserName"`
 		FromUserName string `json:"FromUserName"`
@@ -100,7 +98,6 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 	}
 	//oDYseuFGkl2rn5zdi_Ve_I6vAwr4 是保罗的
 	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" || msg.FromUserName == "oDYseuFGkl2rn5zdi_Ve_I6vAwr4" {
-		log.Infof("_____测试被动回复消息1111")
 		replyMsg := &ReplyMessage{
 			ToUserName:   msg.FromUserName,
 			FromUserName: msg.ToUserName,
@@ -117,7 +114,7 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		// }
 
 		// 设置响应头并返回XML数据
-		log.Infof("_____测试被动回复消息")
+		log.Infof("测试被动回复消息 +%v", replyMsg)
 
 		msg, err := xml.Marshal(&replyMsg)
 		if err != nil {
