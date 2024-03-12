@@ -60,6 +60,7 @@ func bizHandler(c *gin.Context) {
 	} else {
 		log.Errorf("获取appid: %s 的token失败: %+v", r.Appid, err)
 	}
+	return
 	// 转发到用户配置的地址
 	proxyOpen, err := proxyCallbackMsg("", json.MsgType, json.Event, string(body), c)
 	if err != nil {
@@ -73,6 +74,7 @@ func bizHandler(c *gin.Context) {
 }
 
 func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context) error {
+	return nil
 	type Message struct {
 		ToUserName   string `json:"ToUserName"`
 		FromUserName string `json:"FromUserName"`
