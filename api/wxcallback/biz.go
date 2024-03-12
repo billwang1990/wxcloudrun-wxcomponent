@@ -98,13 +98,26 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 	}
 	//oDYseuFGkl2rn5zdi_Ve_I6vAwr4 是保罗的
 	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" || msg.FromUserName == "oDYseuFGkl2rn5zdi_Ve_I6vAwr4" {
+		// 定义接收和回复消息的数据结构
+
+		type ReplyMessage struct {
+			XMLName      xml.Name `xml:"xml"`
+			ToUserName   string   `xml:"ToUserName"`
+			FromUserName string   `xml:"FromUserName"`
+			CreateTime   int64    `xml:"CreateTime"`
+			MsgType      string   `xml:"MsgType"`
+			Content      string   `xml:"Content"`
+		}
+
 		replyMsg := &ReplyMessage{
 			ToUserName:   msg.FromUserName,
 			FromUserName: msg.ToUserName,
-			CreateTime:   time.Now().Unix(),
+			CreateTime:   msg.CreateTime,
 			MsgType:      "text",
 			Content:      "你好我收到了你的消息",
 		}
+
+		c.XML(http.StatusOK, replyMsg)
 
 		// // 将回复消息编码为XML格式
 		// output, err := xml.MarshalIndent(replyMsg, "", "  ")
@@ -114,14 +127,16 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		// }
 
 		// 设置响应头并返回XML数据
-		log.Infof("测试被动回复消息 +%v", replyMsg)
+		// log.Infof("测试被动回复消息 +%v", replyMsg)
 
-		msg, err := xml.Marshal(&replyMsg)
-		if err != nil {
-			log.Infof("[消息回复] - 将对象进行XML编码出错: %v\n", err)
-			return err
-		}
-		_, _ = c.Writer.Write(msg)
+		// msg, err := xml.Marshal(&replyMsg)
+		// if err != nil {
+		// 	log.Infof("[消息回复] - 将对象进行XML编码出错: %v\n", err)
+		// 	return err
+		// }
+		// c.Data(http.StatusOK, "application/xml; charset=utf-8", msg)
+
+		// _, _ = c.Writer.Write(msg)
 		return nil
 	}
 
@@ -205,17 +220,6 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		log.Infof("向 %s发送消息：%s", toUser, content)
 		postContent(toUser, content, token)
 	}
-}
-
-// 定义接收和回复消息的数据结构
-
-type ReplyMessage struct {
-	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:"ToUserName"`
-	FromUserName string   `xml:"FromUserName"`
-	CreateTime   int64    `xml:"CreateTime"`
-	MsgType      string   `xml:"MsgType"`
-	Content      string   `xml:"Content"`
 }
 
 func postContent(to, content string, token string) {
