@@ -96,7 +96,8 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		log.Error(err)
 		return err
 	}
-	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" {
+	//oDYseuFGkl2rn5zdi_Ve_I6vAwr4 是保罗的
+	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" || msg.FromUserName == "oDYseuFGkl2rn5zdi_Ve_I6vAwr4" {
 		log.Infof("_____测试被动回复消息1111")
 		replyMsg := &ReplyMessage{
 			ToUserName:   msg.FromUserName,
