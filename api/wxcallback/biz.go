@@ -102,23 +102,28 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		replyMsg := &ReplyMessage{
 			ToUserName:   msg.FromUserName,
 			FromUserName: msg.ToUserName,
-			CreateTime:   msg.CreateTime,
+			CreateTime:   time.Now().Unix(),
 			MsgType:      "text",
 			Content:      "你好我收到了你的消息",
 		}
-	
-		// 将回复消息编码为XML格式
-		output, err := xml.MarshalIndent(replyMsg, "", "  ")
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode XML"})
-			return nil
-		}
-	
+
+		// // 将回复消息编码为XML格式
+		// output, err := xml.MarshalIndent(replyMsg, "", "  ")
+		// if err != nil {
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode XML"})
+		// 	return nil
+		// }
+
 		// 设置响应头并返回XML数据
 		log.Infof("_____测试被动回复消息")
-		c.Data(http.StatusOK, "application/xml; charset=utf-8", output)
+
+		msg, err := xml.Marshal(&replyMsg)
+		if err != nil {
+			log.Infof("[消息回复] - 将对象进行XML编码出错: %v\n", err)
+			return err
+		}
+		_, _ = c.Writer.Write(msg)
 		return nil
-	
 	}
 
 	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)
@@ -137,7 +142,9 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 				break
 			}
 		}
-		if skip { return }
+		if skip {
+			return
+		}
 	}
 
 	reqGpt := map[string]interface{}{
@@ -202,13 +209,6 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 }
 
 // 定义接收和回复消息的数据结构
-type ReceiveMessage struct {
-	ToUserName   string `xml:"ToUserName"`
-	FromUserName string `xml:"FromUserName"`
-	CreateTime   int64  `xml:"CreateTime"`
-	MsgType      string `xml:"MsgType"`
-	Content      string `xml:"Content"`
-}
 
 type ReplyMessage struct {
 	XMLName      xml.Name `xml:"xml"`
