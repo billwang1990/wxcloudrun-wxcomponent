@@ -9,6 +9,8 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/proxy"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/talksai"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/api/wxcallback"
+	"github.com/WeixinCloud/wxcloudrun-wxcomponent/middleware"
+
 	// "github.com/WeixinCloud/wxcloudrun-wxcomponent/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +27,7 @@ func Include(opts ...Option) {
 // Init 初始化
 func Init() *gin.Engine {
 	r := gin.Default()
-	// r.Use(middleware.LogMiddleWare)
+	r.Use(middleware.LogMiddleWare)
 
 	// 微信消息推送
 	wxcallback.Routers(r)
@@ -51,7 +53,7 @@ func Init() *gin.Engine {
 // InnerServiceInit 内部服务初始化
 func InnerServiceInit() *gin.Engine {
 	r := gin.Default()
-	// r.Use(middleware.LogMiddleWare)
+	r.Use(middleware.LogMiddleWare)
 	innerservice.Routers(r)
 	return r
 }
