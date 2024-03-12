@@ -16,6 +16,8 @@ import (
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/db/model"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+
+	"encoding/xml"
 )
 
 type wxCallbackBizRecord struct {
@@ -53,7 +55,8 @@ func bizHandler(c *gin.Context) {
 
 	token, err := wx.BizGetComponentAccessToken(r.Appid)
 	if err == nil {
-		go replyMsgIfNeeded(&r, token)
+		replyMsgIfNeeded(&r, token, c)
+		return
 	} else {
 		log.Errorf("获取appid: %s 的token失败: %+v", r.Appid, err)
 	}
@@ -69,7 +72,7 @@ func bizHandler(c *gin.Context) {
 	}
 }
 
-func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
+func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context) error {
 	type Message struct {
 		ToUserName   string `json:"ToUserName"`
 		FromUserName string `json:"FromUserName"`
@@ -93,6 +96,30 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string) error {
 		log.Error(err)
 		return err
 	}
+	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" {
+		log.Infof("_____测试被动回复消息1111")
+		replyMsg := &ReplyMessage{
+			ToUserName:   msg.FromUserName,
+			FromUserName: msg.ToUserName,
+			CreateTime:   msg.CreateTime,
+			MsgType:      "text",
+			Content:      "你好我收到了你的消息",
+		}
+	
+		// 将回复消息编码为XML格式
+		output, err := xml.MarshalIndent(replyMsg, "", "  ")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode XML"})
+			return nil
+		}
+	
+		// 设置响应头并返回XML数据
+		log.Infof("_____测试被动回复消息")
+		c.Data(http.StatusOK, "application/xml; charset=utf-8", output)
+		return nil
+	
+	}
+
 	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)
 	// 查询是否有自动回复的配置，包含是否要求关键字、前缀、后缀
 	gptReplyIfNeeded(bot, msg.FromUserName, msg.Content, token)
@@ -171,6 +198,24 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		log.Infof("向 %s发送消息：%s", toUser, content)
 		postContent(toUser, content, token)
 	}
+}
+
+// 定义接收和回复消息的数据结构
+type ReceiveMessage struct {
+	ToUserName   string `xml:"ToUserName"`
+	FromUserName string `xml:"FromUserName"`
+	CreateTime   int64  `xml:"CreateTime"`
+	MsgType      string `xml:"MsgType"`
+	Content      string `xml:"Content"`
+}
+
+type ReplyMessage struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   string   `xml:"ToUserName"`
+	FromUserName string   `xml:"FromUserName"`
+	CreateTime   int64    `xml:"CreateTime"`
+	MsgType      string   `xml:"MsgType"`
+	Content      string   `xml:"Content"`
 }
 
 func postContent(to, content string, token string) {
