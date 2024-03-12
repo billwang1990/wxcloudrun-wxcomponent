@@ -101,7 +101,7 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 		// 定义接收和回复消息的数据结构
 
 		type ReplyMessage struct {
-			XMLName      xml.Name `xml:"xml"`
+			// XMLName      xml.Name `xml:"xml"`
 			ToUserName   string   `xml:"ToUserName"`
 			FromUserName string   `xml:"FromUserName"`
 			CreateTime   int64    `xml:"CreateTime"`
