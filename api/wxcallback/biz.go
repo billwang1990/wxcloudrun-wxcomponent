@@ -17,7 +17,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 
-	"encoding/xml"
 )
 
 type wxCallbackBizRecord struct {
@@ -95,49 +94,6 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 	if err != nil {
 		log.Error(err)
 		return err
-	}
-	//oDYseuFGkl2rn5zdi_Ve_I6vAwr4 是保罗的
-	if msg.FromUserName == "opnbu552g7sy8s63dgm-M60lg7Og" || msg.FromUserName == "oDYseuFGkl2rn5zdi_Ve_I6vAwr4" {
-		// 定义接收和回复消息的数据结构
-
-		type ReplyMessage struct {
-			// XMLName      xml.Name `xml:"xml"`
-			ToUserName   string   `xml:"ToUserName"`
-			FromUserName string   `xml:"FromUserName"`
-			CreateTime   int64    `xml:"CreateTime"`
-			MsgType      string   `xml:"MsgType"`
-			Content      string   `xml:"Content"`
-		}
-
-		replyMsg := &ReplyMessage{
-			ToUserName:   msg.FromUserName,
-			FromUserName: msg.ToUserName,
-			CreateTime:   msg.CreateTime,
-			MsgType:      "text",
-			Content:      "消息已经收到",
-		}
-
-		log.Infof("测试被动回复消息 +%v", replyMsg)
-		c.XML(http.StatusOK, replyMsg)
-
-		// // 将回复消息编码为XML格式
-		// output, err := xml.MarshalIndent(replyMsg, "", "  ")
-		// if err != nil {
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode XML"})
-		// 	return nil
-		// }
-
-		// 设置响应头并返回XML数据
-
-		// msg, err := xml.Marshal(&replyMsg)
-		// if err != nil {
-		// 	log.Infof("[消息回复] - 将对象进行XML编码出错: %v\n", err)
-		// 	return err
-		// }
-		// c.Data(http.StatusOK, "application/xml; charset=utf-8", msg)
-
-		// _, _ = c.Writer.Write(msg)
-		return nil
 	}
 
 	log.Infof("查询到该公众号有绑定AI客服 %+v, %s <-", bot, msg.Content)

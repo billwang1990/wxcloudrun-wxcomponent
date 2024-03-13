@@ -93,6 +93,7 @@ func BindBot(c *gin.Context) {
 		Filters: json.Filters,
 		Prefix:  json.Prefix,
 		Suffix:  json.Suffix,
+		Name: record.AuthorizerAppName,
 	}
 	if err := dao.CreateOrUpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))

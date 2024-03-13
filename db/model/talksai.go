@@ -6,4 +6,6 @@ type TalksAIBot struct {
 	Filters string `gorm:"column:filters" json:"filters"`
 	Prefix  string `gorm:"column:prefix" json:"prefix"`
 	Suffix  string `gorm:"column:suffix" json:"suffix"`
+	//公众号名称
+	Name  string `gorm:"column:name" json:"name"` 
 }

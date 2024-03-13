@@ -106,13 +106,6 @@ func newAuthHander(body *[]byte) error {
 	if err = binding.JSON.BindBody(*body, &record); err != nil {
 		return err
 	}
-	go func() {
-		//{CreateTime:1710058077 AuthorizerAppid:wxc9a70dc0a1542ba9 AuthorizationCode:queryauthcode@@@fMSudJJOuB7oJXHWMKvSDvAHGgPBnb9YH4wXvoBYZ2BDxDWDHieK6FShvAtJvMOpFqxmy79VlA1G_vpsESRArQ AuthorizationCodeExpiredTime:1710061677}
-		err := dao.CreateOrUpdateCachedAuthorizerAppWithCode(record.AuthorizerAppid, record.AuthorizationCode)
-		if err != nil {
-			log.Errorf("use side effect cache auth record failed %+v", err)
-		}
-	}()
 	if refreshtoken, err = queryAuth(record.AuthorizationCode); err != nil {
 		return err
 	}
@@ -135,6 +128,15 @@ func newAuthHander(body *[]byte) error {
 	}); err != nil {
 		return err
 	}
+
+
+	go func() {
+		//{CreateTime:1710058077 AuthorizerAppid:wxc9a70dc0a1542ba9 AuthorizationCode:queryauthcode@@@fMSudJJOuB7oJXHWMKvSDvAHGgPBnb9YH4wXvoBYZ2BDxDWDHieK6FShvAtJvMOpFqxmy79VlA1G_vpsESRArQ AuthorizationCodeExpiredTime:1710061677}
+		err := dao.CreateOrUpdateCachedAuthorizerAppWithCode(record.AuthorizerAppid, record.AuthorizationCode, appinfo.AuthorizerInfo.NickName)
+		if err != nil {
+			log.Errorf("use side effect cache auth record failed %+v", err)
+		}
+	}()
 	return nil
 }
 
