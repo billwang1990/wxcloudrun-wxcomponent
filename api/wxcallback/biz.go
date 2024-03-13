@@ -103,6 +103,17 @@ func replyMsgIfNeeded(r *model.WxCallbackBizRecord, token string, c *gin.Context
 }
 
 func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
+
+	if bot.ExcludeFilters != "" {
+		//Check filter
+		for _, filter := range strings.Split(bot.ExcludeFilters, ";") {
+			if strings.Contains(question, filter) {
+				log.Debugf("机器人将忽略这个问题 %s", filter)
+				return
+			}
+		}
+	}
+
 	if bot.Filters != "" {
 		//Check filter
 		skip := true
@@ -114,16 +125,6 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		}
 		if skip {
 			return
-		}
-	}
-
-	if bot.ExcludeFilters != "" {
-		//Check filter
-		for _, filter := range strings.Split(bot.ExcludeFilters, ";") {
-			if strings.Contains(question, filter) {
-				log.Debugf("机器人将忽略这个问题 %s", filter)
-				return
-			}
 		}
 	}
 
