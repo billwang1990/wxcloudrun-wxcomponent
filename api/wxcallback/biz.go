@@ -119,15 +119,11 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 
 	if bot.ExcludeFilters != "" {
 		//Check filter
-		skip := false
 		for _, filter := range strings.Split(bot.ExcludeFilters, ";") {
 			if strings.Contains(question, filter) {
-				skip = true
-				break
+				log.Debugf("机器人将忽略这个问题 %s", filter)
+				return
 			}
-		}
-		if skip {
-			return
 		}
 	}
 
