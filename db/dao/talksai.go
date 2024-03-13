@@ -11,6 +11,7 @@ const talksaiBotTableName = "talks_ai_bot"
 
 // CreateOrUpdateAuthorizerRecord 创建或更新授权账号信息
 func CreateOrUpdateTalksAIBot(record *model.TalksAIBot) error {
+	log.Debugf("新增机器人 %+v", record)
 	var err error
 	cli := db.Get()
 	if err = cli.Table(talksaiBotTableName).Clauses(clause.OnConflict{
