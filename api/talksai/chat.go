@@ -13,10 +13,11 @@ import (
 )
 
 type bindingBot struct {
-	AuthCode string `json:"code"`
-	Filters  string `json:"filters"`
-	Prefix   string `json:"prefix"`
-	Suffix   string `json:"suffix"`
+	AuthCode       string `json:"code"`
+	Filters        string `json:"filters"`
+	ExcludeFilters string `json:"excludefilters"`
+	Prefix         string `json:"prefix"`
+	Suffix         string `json:"suffix"`
 }
 
 func QueryBoundBot(c *gin.Context) {
@@ -54,10 +55,11 @@ func UpdateBot(c *gin.Context) {
 		return
 	}
 	b := &model.TalksAIBot{
-		BotID:   botid,
-		Filters: json.Filters,
-		Prefix:  json.Prefix,
-		Suffix:  json.Suffix,
+		BotID:          botid,
+		Filters:        json.Filters,
+		Prefix:         json.Prefix,
+		Suffix:         json.Suffix,
+		ExcludeFilters: json.ExcludeFilters,
 	}
 	if err := dao.UpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))
@@ -93,7 +95,7 @@ func BindBot(c *gin.Context) {
 		Filters: json.Filters,
 		Prefix:  json.Prefix,
 		Suffix:  json.Suffix,
-		Name: record.AuthorizerAppName,
+		Name:    record.AuthorizerAppName,
 	}
 	if err := dao.CreateOrUpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))

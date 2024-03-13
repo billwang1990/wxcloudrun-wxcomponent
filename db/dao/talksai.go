@@ -30,6 +30,7 @@ func UpdateTalksAIBot(record *model.TalksAIBot) error {
             "filters": record.Filters,
             "prefix":  record.Prefix,
             "suffix":  record.Suffix,
+            "excludefilters":  record.ExcludeFilters,
         }).Error
 
     if err != nil {

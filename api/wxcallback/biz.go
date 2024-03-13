@@ -117,6 +117,20 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		}
 	}
 
+	if bot.ExcludeFilters != "" {
+		//Check filter
+		skip := false
+		for _, filter := range strings.Split(bot.ExcludeFilters, ";") {
+			if strings.Contains(question, filter) {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			return
+		}
+	}
+
 	reqGpt := map[string]interface{}{
 		"sessionId": toUser,
 		"question":  question,
