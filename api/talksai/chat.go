@@ -3,6 +3,7 @@ package talksai
 import (
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/errno"
 	"github.com/WeixinCloud/wxcloudrun-wxcomponent/comm/log"
@@ -56,10 +57,10 @@ func UpdateBot(c *gin.Context) {
 	}
 	b := &model.TalksAIBot{
 		BotID:          botid,
-		Filters:        json.Filters,
+		Filters:        strings.ReplaceAll(json.Filters, "；", ";"),
 		Prefix:         json.Prefix,
 		Suffix:         json.Suffix,
-		ExcludeFilters: json.ExcludeFilters,
+		ExcludeFilters: strings.ReplaceAll(json.ExcludeFilters, "；", ";"),
 	}
 	if err := dao.UpdateTalksAIBot(b); err != nil {
 		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData(err.Error()))

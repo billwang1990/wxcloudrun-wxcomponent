@@ -118,7 +118,7 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		//Check filter
 		skip := true
 		for _, filter := range strings.Split(bot.Filters, ";") {
-			if strings.Contains(question, filter) {
+			if strings.Contains(question, filter) || filter != "" {
 				skip = false
 				break
 			}
