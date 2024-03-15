@@ -107,7 +107,7 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 	if bot.ExcludeFilters != "" {
 		//Check filter
 		for _, filter := range strings.Split(bot.ExcludeFilters, ";") {
-			if strings.Contains(question, filter) {
+			if strings.Contains(question, filter) && filter != "" {
 				log.Debugf("机器人将忽略这个问题 %s", filter)
 				return
 			}
@@ -118,7 +118,7 @@ func gptReplyIfNeeded(bot *model.TalksAIBot, toUser, question, token string) {
 		//Check filter
 		skip := true
 		for _, filter := range strings.Split(bot.Filters, ";") {
-			if strings.Contains(question, filter) || filter != "" {
+			if strings.Contains(question, filter) && filter != "" {
 				skip = false
 				break
 			}
