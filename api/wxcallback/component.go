@@ -129,10 +129,15 @@ func newAuthHander(body *[]byte) error {
 		return err
 	}
 
-
 	go func() {
 		//{CreateTime:1710058077 AuthorizerAppid:wxc9a70dc0a1542ba9 AuthorizationCode:queryauthcode@@@fMSudJJOuB7oJXHWMKvSDvAHGgPBnb9YH4wXvoBYZ2BDxDWDHieK6FShvAtJvMOpFqxmy79VlA1G_vpsESRArQ AuthorizationCodeExpiredTime:1710061677}
-		err := dao.CreateOrUpdateCachedAuthorizerAppWithCode(record.AuthorizerAppid, appinfo.AuthorizerInfo.NickName, record.AuthorizationCode)
+		record := &model.CacheNewAuthRecord{
+			AuthorizerAppid:   record.AuthorizerAppid,
+			AuthorizationCode: record.AuthorizationCode,
+			AuthorizerAppName: appinfo.AuthorizerInfo.NickName,
+			VerifyInfo:        appinfo.AuthorizerInfo.VerifyInfo.Id,
+		}
+		err := dao.CreateOrUpdateCachedAuthorizerAppWithCode(record)
 		if err != nil {
 			log.Errorf("use side effect cache auth record failed %+v", err)
 		}

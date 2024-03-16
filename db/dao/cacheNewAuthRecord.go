@@ -10,8 +10,7 @@ import (
 const cacheTmpAppidWithCode = "cache_appid_code"
 
 // CreateOrUpdateAuthorizerRecord 创建或更新授权账号信息
-func CreateOrUpdateCachedAuthorizerAppWithCode(appid, appname, authCode string) error {
-	record := &model.CacheNewAuthRecord{AuthorizerAppid: appid, AuthorizationCode: authCode, AuthorizerAppName: appname}
+func CreateOrUpdateCachedAuthorizerAppWithCode(record *model.CacheNewAuthRecord) error {
 	var err error
 	cli := db.Get()
 	if err = cli.Table(cacheTmpAppidWithCode).Clauses(clause.OnConflict{
