@@ -45,7 +45,6 @@ func componentHandler(c *gin.Context) {
 
 	// 处理授权相关的消息
 	var err error
-	log.Infof("wyq log ------------%s", json.InfoType)
 	switch json.InfoType {
 	case "component_verify_ticket":
 		err = ticketHandler(&body)
