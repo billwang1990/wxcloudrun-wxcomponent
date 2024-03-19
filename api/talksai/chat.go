@@ -95,12 +95,9 @@ func BindBot(c *gin.Context) {
 		go dao.DeleteCachedAuthorizerAppRecord(record.AuthorizerAppid)
 	}()
 
-	if record.VerifyInfo == -1 {
-		c.JSON(http.StatusOK, errno.ErrInvalidParam.WithData("该公众号未认证，不能绑定"))
-		return
-	}
 	b := &model.TalksAIBot{
 		BotID:   botid,
+		Verified: record.VerifyInfo == 0,
 		AppID:   record.AuthorizerAppid,
 		Filters: json.Filters,
 		Prefix:  json.Prefix,

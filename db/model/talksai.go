@@ -2,6 +2,7 @@ package model
 
 type TalksAIBot struct {
 	BotID          string `gorm:"column:botid" json:"botid"`
+	Verified       bool   `gorm:"column:verified" json:"verified"`
 	AppID          string `gorm:"column:appid" json:"appid"`
 	Filters        string `gorm:"column:filters" json:"filters"`
 	ExcludeFilters string `gorm:"column:excludefilters" json:"excludefilters"`
